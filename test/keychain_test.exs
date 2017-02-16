@@ -2,7 +2,7 @@ defmodule KeychainTest do
   use ExUnit.Case
   doctest Keychain
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "Get a Keypair" do
+    assert {:ok, _} =Keychain.generate_pair
   end
 end
