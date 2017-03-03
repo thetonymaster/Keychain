@@ -23,7 +23,6 @@ defmodule Keychain do
   def public_key do
     key = File.open!(@key <> ".pub",[:read])
     |> IO.read(:line)
-    |> String.replace("\n", "")
     File.close(@key <> ".pub")
     key
   end
@@ -34,14 +33,13 @@ defmodule Keychain do
   def private_key do
     key = File.open!(@key,[:read])
     |> IO.read(:all)
-    |> String.replace("\n", "")
     File.close(@key)
     key
   end
 
   defp create_keys(comment) do
     File.mkdir!(@path)
-    args = ["-t", "rsa", "-b", "4096", "-f", @key, "-C", comment, "-P", ""]
+    args = ["-t", "rsa", "-b", "4096", "-f", @key, "-C", comment, "-N", ""]
     System.cmd(@ssh_keygen, args)
   end
 
