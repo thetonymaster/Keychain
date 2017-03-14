@@ -13,8 +13,9 @@ defmodule Keychain do
     create_keys(comment)
     public = public_key()
     private = private_key()
+    fingerprint = get_fingerprint()
     remove_keys()
-    {:ok, %{public: public, private: private}}
+    {:ok, %{public: public, private: private, fingerprint: fingerprint}}
   end
 
   @doc """
@@ -41,6 +42,13 @@ defmodule Keychain do
     File.mkdir!(@path)
     args = ["-t", "rsa", "-b", "4096", "-f", @key, "-C", comment, "-N", ""]
     System.cmd(@ssh_keygen, args)
+  end
+
+  defp get_fingerprint do
+    args = ["-lf", @key]
+    {fingerprint, _} = System.cmd(@ssh_keygen, args)
+    res = String.split(fingerprint, " ")
+    Enum.at(res, 1)
   end
 
   defp remove_keys do
